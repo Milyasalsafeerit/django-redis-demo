@@ -45,7 +45,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',  #new   
     'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware', #new
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -127,7 +129,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redis Configurations
-REDIS_HOST = 'redis-12035.c10.us-east-1-3.ec2.cloud.redislabs.com'
-REDIS_PORT = 12035
-REDIS_USERNAME = "default"
-REDIS_PASSWORD = "QzzmUWjFwGGwFYSHCUzQEpNDI1Xc6ARr"
+# New
+CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis-12035.c10.us-east-1-3.ec2.cloud.redislabs.com:12035/0",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "PASSWORD": "QzzmUWjFwGGwFYSHCUzQEpNDI1Xc6ARr"
+            },
+        }
+    }
+
+# No need Any more
+#------------------------------------------------------------------
+# REDIS_HOST = 'redis-12035.c10.us-east-1-3.ec2.cloud.redislabs.com'
+# REDIS_PORT = 12035
+# REDIS_USERNAME = "default"
+# REDIS_PASSWORD = "QzzmUWjFwGGwFYSHCUzQEpNDI1Xc6ARr"

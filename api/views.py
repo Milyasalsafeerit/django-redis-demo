@@ -4,12 +4,13 @@ import redis
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
-
+from django.core.cache import cache as redis_instance
 # Connect to our Redis instance
-redis_instance = redis.StrictRedis(host=settings.REDIS_HOST,
-                                  port=settings.REDIS_PORT, db=0,
-                                  username= settings.REDIS_USERNAME,
-                                  password= settings.REDIS_PASSWORD)
+# redis_instance = redis.StrictRedis(host=settings.REDIS_HOST,
+#                                   port=settings.REDIS_PORT, db=0,
+#                                   username= settings.REDIS_USERNAME,
+#                                   password= settings.REDIS_PASSWORD)
+
 
 @api_view(['GET', 'POST'])
 def manage_items(request, *args, **kwargs):
@@ -17,7 +18,7 @@ def manage_items(request, *args, **kwargs):
         items = {}
         count = 0
         for key in redis_instance.keys("*"):
-            items[key.decode("utf-8")] = redis_instance.get(key)
+            items[key] = redis_instance.get(key)
             count += 1
         response = {
             'count': count,
@@ -30,7 +31,7 @@ def manage_items(request, *args, **kwargs):
         print(item)
         key = list(item.keys())[0]
         value = item[key]
-        redis_instance.set(key, value, 300)
+        redis_instance.set(key, value, 50)
         response = {
             'msg': f"{key} successfully set to {value}"
         }
