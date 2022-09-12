@@ -8,7 +8,8 @@ from rest_framework.response import Response
 # Connect to our Redis instance
 redis_instance = redis.StrictRedis(host=settings.REDIS_HOST,
                                   port=settings.REDIS_PORT, db=0,
-                                  socket_timeout=3000)
+                                  username= settings.REDIS_USERNAME,
+                                  password= settings.REDIS_PASSWORD)
 
 @api_view(['GET', 'POST'])
 def manage_items(request, *args, **kwargs):
